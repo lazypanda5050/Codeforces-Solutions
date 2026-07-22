@@ -2,45 +2,51 @@
 using namespace std;
 
 int main(){
-    cin.tie(0)->sync_with_stdio(false);
-    
-    int n, q;
-    cin >> n >> q;
+	// sort the array (increasing)
+	// keep array of frequencies (how many times used)
+	// sort second array (increasing)
+	// ans += a1[i]*a2[i]
 
-    vector<long long> a(n);
-    for (int i = 0; i < n; i++){
-        cin >> a[i];
-    }
+	int n,q;
+	cin >> n >> q;
 
-    vector<long long> diff(n + 1, 0);
+	int a[n];
+	for (int i = 0; i < n; i++){
+		cin >> a[i];
+	}
 
-    for (int i = 0; i < q; i++){
-        int l, r;
-        cin >> l >> r;
-        l--; r--; 
-        
-        diff[l]++;
-        if (r + 1 < n) {
-            diff[r + 1]--;
-        }
-    }
+	sort(a,a+n);
 
-    vector<long long> freq(n, 0);
-    long long current_freq = 0;
-    for (int i = 0; i < n; i++) {
-        current_freq += diff[i];
-        freq[i] = current_freq;
-    }
+	int queries[q][2];
 
-    sort(a.begin(), a.end());
-    sort(freq.begin(), freq.end());
+	for (int i = 0; i < q; i++){
+		cin >> queries[i][0] >> queries[i][1];
+	}
 
-    long long ans = 0;
-    for (int i = 0; i < n; i++){
-        ans += a[i] * freq[i];
-    }
+	int freq[n+1] = { 0 };
 
-    cout << ans << '\n';
+	for (int i = 0; i < q; i++){
+		freq[queries[i][0]-1]++; // 1 indexed -> 0 indexed
+		freq[queries[i][1]]--;
+	}
 
-    return 0;
+	for (int i = 1; i < n+1; i++){
+		freq[i] += freq[i-1];
+	}
+
+	sort(freq,freq+n);
+
+	int ans = 0;
+
+	for (int i = 0; i < n; i++){
+		ans += a[i]*freq[i];
+	}
+
+	cout << ans << '\n';
+
+	return 0;
 }
+
+// x x
+//   x x
+// x x x
